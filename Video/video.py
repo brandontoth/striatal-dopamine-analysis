@@ -16,7 +16,7 @@ SCALING_FACTOR = 12 # use to alter the length of the recording
 FILE_LOCATION = 'E:\Videos'
 
 # name boxes
-boxID = ["null1", "230128_BT72_12hr_choc", "230128_BT71_12hr_choc", "230128_BT73_12hr_choc"]
+boxID = []
 
 # class definition for individual threads that will be used to write videos
 class camThread(threading.Thread):
