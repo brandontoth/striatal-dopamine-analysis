@@ -29,8 +29,6 @@ for i = 1:length(transitionFrames.wakeToCatTransition)
     % grab frame 40 s prior to the onset of CLE
     vidStart = vidStepPerFrame * (transitionFrames.wakeToCatTransition(i) - floor(camFs * 40));
 
-%     keyboard
-
     vidObj.CurrentTime = vidStart; % move video to that point in time
 
     curFrameNum = 1; % counter for while loop
