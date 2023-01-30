@@ -7,9 +7,9 @@ vidStepPerFrame = vidObj.Duration / vidObj.NumFrames;
 % we want to look 40 s before and after the CLE
 beforeAfterTime = 40 * floor(camFs) * 2;
 
-% if ~exist(saveLocation, 'dir')
-%     mkdir(saveLocation)
-% end
+if ~exist(saveLocation, 'dir')
+    mkdir(saveLocation)
+end
 
 %% W-CAT transitions
 % find the duration of all CLE and set to camera frame rate
