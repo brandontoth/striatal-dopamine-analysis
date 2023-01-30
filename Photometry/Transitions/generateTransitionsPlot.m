@@ -49,22 +49,22 @@ for k = 1:numel(D)
     behavioralData = getBehavioralData(downFP, Food, RW, Lick);
     
     % subsample all transitions
-%     if tf == 1
-%         ratio = thetaDeltaRatio(adjustedLabels, downEEG, epochLength, downFs);
-%         transitions = subsample(adjustedLabels, downFP, epochLength, downFs);
-%     else
-%         ratio = thetaDeltaRatio(labels, downEEG, epochLength, downFs);
-%         transitions = subsample(labels, downFP, epochLength, downFs);
-%     end
-%     
+    if tf == 1
+        ratio = thetaDeltaRatio(adjustedLabels, downEEG, epochLength, downFs);
+        transitions = subsample(adjustedLabels, downFP, epochLength, downFs);
+    else
+        ratio = thetaDeltaRatio(labels, downEEG, epochLength, downFs);
+        transitions = subsample(labels, downFP, epochLength, downFs);
+    end
+   
     % sort into relevant groups
     if tf == 1
-%         ratioKO(k) = ratio;
-%         storeKO(k) = transitions;
+        ratioKO(k) = ratio;
+        storeKO(k) = transitions;
         behaviorKO(k) = behavioralData;
     else
-%         ratioWT(k) = ratio;
-%         storeWT(k) = transitions;
+        ratioWT(k) = ratio;
+        storeWT(k) = transitions;
         behaviorWT(k) = behavioralData;
     end
 
@@ -82,7 +82,7 @@ behavioralFields = string(fieldnames(behaviorKO));
 for i = 1:length(behavioralFields)
     getBehaviorField = behavioralFields(i);
     koBehavior.(getBehaviorField) = vertcat(behaviorKO.(behavioralFields(i)));
-%     wtBehavior.(getBehaviorField) = vertcat(behaviorWT.(behavioralFields(i)));
+    wtBehavior.(getBehaviorField) = vertcat(behaviorWT.(behavioralFields(i)));
 end
 
 for i = 1:length(transitionFields)
@@ -111,48 +111,4 @@ end
 %% plot everything
 
 plotGroupTransitions(koTransitions, koRatios, cutTime, downFs, 'g')
-plotGroupBehavior(koBehavior, 5000, 1000, 'm')
 overlayGroupBehavior(koBehavior, wtBehavior, 5000, 1000)
-
-%% quick visualization
-smoothingFactor = 1000;
-yAxisLabel = '\DeltaF/F (zscore)';
-stateTransitionKO = string(fields(koTransitions));
-stateTransitionKO = stateTransitionKO(7);
-stateTransitionWT = string(fields(wtTransitions));
-stateTransitionWT = stateTransitionWT(7);
-cutTime = 60000;
-Fs = 1000;
-
-figure;
-err = smooth(std(koTransitions.(stateTransitionKO), 0, 1) ./ sqrt(size(koTransitions.(stateTransitionKO), 1)), smoothingFactor);
-shadedErrorBar(1:length(koTransitions.(stateTransitionKO)), ...
-    smooth(mean(koTransitions.(stateTransitionKO)), smoothingFactor), ...
-    err, 'lineprops', 'g')
-
-hold on
-
-err = smooth(std(wtTransitions.(stateTransitionWT), 0, 1) ./ sqrt(size(wtTransitions.(stateTransitionWT), 1)), smoothingFactor);
-shadedErrorBar(1:length(wtTransitions.(stateTransitionWT)), ...
-    smooth(mean(wtTransitions.(stateTransitionWT)), smoothingFactor), ...
-    err, 'lineprops', 'b')
-
-xline(cutTime, 'Color','red','LineStyle','--', 'LineWidth', 2);
-% ylim([-.5 1.5])
-
-ylabel(yAxisLabel)
-xt = get(gca, 'xtick');
-set(gca, 'XTick', xt, 'xticklabel', (xt - cutTime) / Fs)
-xlim([0 length(wtTransitions.(stateTransitionKO))])
-xlabel('Time (s)')
-
-title('Wake to NREM')
-
-%% averages
-clear afterAvg beforeAvg
-field = KO.lickingCat;
-
-for i = 1:size(field, 1)
-    afterAvg(i) = mean(field(i, 40001:70001));
-    beforeAvg(i) = mean(field(i, 1:30001));
-end
