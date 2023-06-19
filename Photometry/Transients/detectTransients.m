@@ -4,11 +4,11 @@ downFs    = 60;
 downPhoto = resample(photoSignal, downFs, Fs);
 
 filtFP1 = designfilt('lowpassiir', 'FilterOrder', 2, ...
-                'PassbandFrequency', 4, 'SampleRate', downFs);
+                'PassbandFrequency', 4, 'SampleRate', Fs);
 filtSig1 = filtfilt(filtFP1, downPhoto);
 
 filtFP2 = designfilt('lowpassiir', 'FilterOrder', 2, ...
-                'PassbandFrequency', 40, 'SampleRate', downFs);
+                'PassbandFrequency', 40, 'SampleRate', Fs);
 filtSig2 = filtfilt(filtFP2, downPhoto);
 
 diffSig = filtSig1 - filtSig2;
