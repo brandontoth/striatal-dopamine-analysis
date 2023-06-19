@@ -1,14 +1,14 @@
-function peakArray = detectTransients(photoSignal)
+function peakArray = detectTransients(photoSignal, Fs)
 
 downFs    = 60;
-downPhoto = resample(photoSignal, downFs, 1000);
+downPhoto = resample(photoSignal, downFs, Fs);
 
 filtFP1 = designfilt('lowpassiir', 'FilterOrder', 2, ...
-                'PassbandFrequency', 4, 'SampleRate', 1000);
+                'PassbandFrequency', 4, 'SampleRate', downFs);
 filtSig1 = filtfilt(filtFP1, downPhoto);
 
 filtFP2 = designfilt('lowpassiir', 'FilterOrder', 2, ...
-                'PassbandFrequency', 40, 'SampleRate', 1000);
+                'PassbandFrequency', 40, 'SampleRate', downFs);
 filtSig2 = filtfilt(filtFP2, downPhoto);
 
 diffSig = filtSig1 - filtSig2;
