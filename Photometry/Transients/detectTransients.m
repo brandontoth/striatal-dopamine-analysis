@@ -1,6 +1,7 @@
 function peakArray = detectTransients(photoSignal)
 
-downPhoto = resample(photoSignal, 60, 1000);
+downFs    = 60;
+downPhoto = resample(photoSignal, downFs, 1000);
 
 filtFP1 = designfilt('lowpassiir', 'FilterOrder', 2, ...
                 'PassbandFrequency', 4, 'SampleRate', 1000);
@@ -20,11 +21,11 @@ threshCandidate = mean(dxSig) + std(dxSig) * 2;
 % plot(dxSig)
 % yline(threshCandidate)
 
-[pks, locs] = findpeaks(diffSigSq, 1000, 'MinPeakHeight', threshCandidate);
+[pks, locs] = findpeaks(diffSigSq, downFs, 'MinPeakHeight', threshCandidate);
 
 locArray = nan(1, length(downPhoto));
 for i = 1:length(locs)
-    cur = floor(locs(i)*1000);
+    cur = floor(locs(i) * downFs);
     locArray(cur) = pks(i);
 end
 
